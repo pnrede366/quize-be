@@ -217,15 +217,20 @@ router.post('/:id/submit', authMiddleware, async (req, res) => {
     quiz.timesPlayed += 1;
     await quiz.save();
 
-    // Emit socket event for leaderboard update
-    const io = req.app.get('io');
-    if (io) {
-      io.emit('leaderboard-update', {
-        userId: req.user._id,
-        username: user.username,
-        points: user.points,
-        level: user.level,
-      });
+    // Emit socket event for leaderboard update (if Socket.IO is available)
+    try {
+      const io = req.app?.get('io');
+      if (io) {
+        io.emit('leaderboard-update', {
+          userId: req.user._id,
+          username: user.username,
+          points: user.points,
+          level: user.level,
+        });
+      }
+    } catch (error) {
+      // Socket.IO not available (e.g., on Vercel serverless)
+      console.log('Socket.IO not available - skipping real-time update');
     }
 
     res.json({
