@@ -10,7 +10,7 @@ router.get('/leaderboard', async (req, res) => {
   try {
     console.log('Leaderboard API called');
     const users = await User.find({ totalQuizzesPlayed: { $gt: 0 } })
-      .select('username level points totalQuizzesPlayed')
+      .select('username level points totalQuizzesPlayed profilePicture')
       .sort({ points: -1 })
       .limit(100);
 
@@ -22,6 +22,7 @@ router.get('/leaderboard', async (req, res) => {
       score: user.points,
       level: user.level,
       quizzesTaken: user.totalQuizzesPlayed,
+      profilePicture: user.profilePicture || null,
     }));
 
     res.json(leaderboard);
