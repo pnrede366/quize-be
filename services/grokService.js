@@ -70,7 +70,7 @@ const callGrokAPI = async (prompt) => {
             content: prompt,
           },
         ],
-        model: 'grok-2-latest',
+        model: 'grok-4-latest',
         stream: false,
         temperature: 0.7,
       },
